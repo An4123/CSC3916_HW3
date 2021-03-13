@@ -4,7 +4,7 @@
   "description": "Web API 3916 Homework 3",
   "main": "server.js",
   "scripts": {
-    "test": "mocha --timeout 10000 --exit"
+    "test": "mocha --timeout 60000 --exit"
   },
   "repository": {
     "type": "git",
@@ -13,13 +13,14 @@
   "keywords": [
     "Movie"
   ],
-  "author": "Shawn McCarthy",
+  "author": "An Vo",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/AnVo4123/CSC3916_HW3/issues"
+    "url": "https://github.com/An4123/CSC3916_HW3/issues"
   },
-  "homepage": "https://github.com/AnVo4123/CSC3916_HW3#readme",
+  "homepage": "https://github.com/An4123/CSC3916_HW3#readme",
   "dependencies": {
+    "bcrypt-nodejs": "^0.0.3",
     "body-parser": "^1.19.0",
     "cors": "^2.8.5",
     "crypto": "^1.0.1",
@@ -27,6 +28,7 @@
     "express": "^4.17.1",
     "http": "0.0.1-security",
     "jsonwebtoken": "^8.5.1",
+    "mongoose": "^5.12.0",
     "passport": "^0.4.1",
     "passport-http": "^0.3.0",
     "passport-jwt": "^4.0.0"
