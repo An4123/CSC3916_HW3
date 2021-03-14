@@ -48,30 +48,31 @@ router.post('/signup', function(req, res) {
     if (!req.body.username || !req.body.password) {
         res.json({success: false, msg: 'Please include both username and password to signup.'})
     } else {
-        var User = new User()
-        User.name = req.body.name
-        User.username = req.body.username
-        User.password = req.body.password
+        var user = new User()
+        user.name = req.body.name
+        user.username = req.body.username
+        user.password = req.body.password
 
-        User.save(function(err){
+        user.save(function(err){
             if (err) {
                 if (err.code === 11000) return res.json({success: false, message: 'A user with that username already exist'})
                 
                 else
                     return res.json(err)
             }
+            console.log("created new user")
             res.json({success: true, msg: 'Successfully created new user.'})
         })
     }
 });
 
 router.post('/signin', function (req, res) {
-    var User = db.findOne(req.body.username);
+    var user = db.findOne(req.body.username);
     var userNew = new User();
     userNew.username = req.body.username
     userNew.password = req.body.password
 
-    User.findOne({username: userNew.username}).select('name username password').exec(function(err, user){
+    user.findOne({username: userNew.username}).select('name username password').exec(function(err, user){
         if(err){
             res.send(err)
         }
