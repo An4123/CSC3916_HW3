@@ -5,25 +5,22 @@ let chaiHttp = require('chai-http');       // require 'chai-http' to call our we
 let server = require('../server');        // require our server.js file
 let User = require('../Users');
 
-chai.should();
 chai.use(chaiHttp);        // tell chai to use chaihttp so it can call webservices
 
 
-let login_details = {
-    name : 'test',
-    username : 'email@email.com',
-    password : '123@abc'
-}
+
 
 let movie_details = {
-    title : 'scary',
-    release : '2020',
+    title : 'hehe',
+    release : '1998',
     genre : 'horror',
-    characters : { 
-        characterName: 'bill',
-        actorName: 'bil'
-    }
+    characters : []
 }
+
+movie_details.characters.push({
+    characterName:'vonathan',
+    actorName:'anathan'
+});
 
 
 
@@ -56,20 +53,68 @@ let movie_details = {
 //         done()
 //     })
 
-    describe('/signup', () => {
-        it('it should register, login and check our token', (done) => {   // what should 'it' do
-            chai.request(server)                            // do a chai request on our server
-                .post('/signup')                            // do a post to 'signup'
-                .send(login_details)                        // send our login details
-                .end((err, res) =>{                         // should return error or response
-                    console.log(JSON.stringify(res.body))
-                    // res.should.have.status(200)                 // check if status is 200
-                    // res.body.success.should.be.eql(true);       // should have a body
-                })
-        })
-    })
-
     // describe('/signup', () => {
+    //     it('it should register, login and check our token', (done) => {   // what should 'it' do
+    //         chai.request(server)                            // do a chai request on our server
+    //             .post('/signup')                            // do a post to 'signup'
+    //             .send(login_details)                        // send our login details
+    //             .end((err, res) =>{                         // should return error or response
+    //                 console.log(JSON.stringify(res.body))
+    //                 // res.should.have.status(200)                 // check if status is 200
+    //                 // res.body.success.should.be.eql(true);       // should have a body
+    //                 done();
+    //             })
+    //     })
+    // })
+
+    // describe('/signin', () => {
+    //     it('will check our log in info', (done) => {   // what should 'it' do
+    //         chai.request(server)// do a chai request on our server
+    //             .post('/signin')                            // do a post to 'signup'
+    //             .send(login_details)                        // send our login details
+    //             .end((err, res) =>{                         // should return error or response
+    //                 console.log(JSON.stringify(res.body))
+    //                 // res.should.have.status(200)                 // check if status is 200
+    //                 // res.body.success.should.be.eql(true);       // should have a body
+    //                 let token = res.body.token;
+    //                 consol.log(token)
+    //                 // done();
+    //             })
+    //     })
+    // })
+
+    // describe('/moviecollection', () => {
+    //     it('adds a movie to the database', (done) => {   // what should 'it' do
+    //         chai.request(server)// do a chai request on our server
+    //             .post('/moviecollection')                            // do a post to 'signup'
+    //             .set('Authorization', token)
+    //             .send(movie_details)                            // send our login details
+    //             .end((err, res) =>{                         // should return error or response
+    //                 console.log(JSON.stringify(res.body))
+    //                 // res.should.have.status(200)                 // check if status is 200
+    //                 // res.body.success.should.be.eql(true);       // should have a body
+    //                 done();
+    //             })
+    //     })
+    // })
+    //
+    // describe('/moviecollection', () => {
+    //     it('adds a movie to the database', (done) => {   // what should 'it' do
+    //         chai.request(server)// do a chai request on our server
+    //             .get('/moviecollection')                            // do a post to 'signup'
+    //             .set('Authorization', token)
+    //             .send(movie_details)                        // send our login details
+    //             .end((err, res) =>{                         // should return error or response
+    //                 console.log(JSON.stringify(res.body))
+    //                 // res.should.have.status(200)                 // check if status is 200
+    //                 // res.body.success.should.be.eql(true);       // should have a body
+    //                 done();
+    //             })
+    //     })
+    // })
+
+
+// describe('/signup', () => {
     //     it('it should register, login and check our token', (done) => {   // what should 'it' do
     //         chai.request(server)                            // do a chai request on our server
     //             .post('/signup')                            // do a post to 'signup'
@@ -99,5 +144,57 @@ let movie_details = {
 //                         })
 //                 })
 //         });
+//     })
+// })
+
+let login_details = {
+    name : 'heaasdf',
+    username : 'hela',
+    password : 'hela'
+}
+
+describe('/signup ', () => {
+    it('it should Register, Login, and check token', (done) => {
+    chai.request(server)
+        .post('/signup')
+        .send(login_details)
+        .end((err, res) => {
+            console.log(JSON.stringify(res.body))
+            // res.should.have.status(200)
+            done()
+        });
+    });
+});
+
+
+// describe('/sign in test', () => {
+//     it('will test if i can log in and save the jwt token', (done) => {
+//         chai.request(server)
+//             .post('/signin')
+//             .send(login_details)
+//             .end((err,res)=> {
+//                 // console.log(JSON.stringify(res.body))
+//                 let token = res.body.token
+//                 console.log(token)
+//                 done()
+//             })
+//     })
+// })
+
+
+// describe('/signin', () => {
+//     it('will check our log in info', (done) => {   // what should 'it' do
+//         chai.request(server)// do a chai request on our server
+//             .post('/signin')                            // do a post to 'signup'
+//             .send(login_details)                        // send our login details
+//             .end((err, res) =>{                         // should return error or response
+//                 console.log(JSON.stringify(res.body))
+//                 // res.should.have.status(200)                 // check if status is 200
+//                 // res.body.success.should.be.eql(true);       // should have a body
+//                 if(res.body.msg !== 'Authentication failed.') {
+//                     token = res.body.token;
+//                 }
+//                 done();
+//             })
 //     })
 // })
