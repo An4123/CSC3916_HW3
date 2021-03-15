@@ -8,6 +8,7 @@ mongoose.connect(process.env.DB, { useNewUrlParser: true } );
 mongoose.set('useCreateIndex', true);
 
 // user schema
+
 var UserSchema = new Schema({
     name: String,
     username: { type: String, required: true, index: { unique: true }},
