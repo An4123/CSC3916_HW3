@@ -13,6 +13,7 @@ var jwt = require('jsonwebtoken');
 var cors = require('cors');
 var User = require('./Users');
 var Movie = require('./Movies');
+var Review = require('./Review');
 
 
 
@@ -64,34 +65,50 @@ router.post('/signup', function(req, res) {
     }
 });
 
-router.post('/signin', function(req, res) {
+router.post('/signin', function (req, res) {
+    // create a new temp user and get the request's information saved into it
     var userNew = new User();
-    userNew.username = req.body.username;
-    userNew.password = req.body.password;
+    userNew.username = req.body.username
+    userNew.password = req.body.password
 
-    User.findOne({username: userNew.username }).select('name username password').exec(function(err, user) {
-        if (err){ 
+    // we find the user's username
+    User.findOne({username: userNew.username}).select('name username password').exec(function(err, user){
+        if(err){
             res.send(err)
+            throw err
         }
-        user.comparePassword(userNew.password, function(isMatch){
-            if (isMatch) {
-                var userToken = {id: user._id, username: user.username};
-                var token = jwt.sign(userToken, process.env.SECRET_KEY);
-                console.log(token)
-                res.json({success: true, token: 'JWT ' + token});
-            }
-            else {
-                res.status(401).send({success: false, message: 'Authentication failed.'});
-            }
-        });
-    });
+
+        // if the user returns as a null that means we never found the username
+        if(user == null)
+        {
+            res.json({success: false, msg: 'No user found with the following username'})
+            res.status(401).send({success: false, msg: 'Authentication failed.'})
+        }
+        else{
+            // if we did find a user, then we compare the password that was in our databas to the input
+            user.comparePassword(userNew.password, function(isMatch){
+                // if its matched we create a user token and send it to them
+                if(isMatch){
+                    var userToken = {id: user.id, username: user.username}
+                    var token = jwt.sign(userToken, process.env.SECRET_KEY)
+                    res.json({success: true, token: 'JWT ' + token})
+                }
+                // otherwise wrong password
+                else{
+                    res.status(401).send({success: false, msg: 'Authentication failed.'})
+                }
+        })
+        }
+    })
 });
 
 
 router.route('/moviecollection')
     .post(authJwtController.isAuthenticated, function(req,res){            // create new movie
         var numOfChars = req.body.characters.size;
-        // goes thru character array inside of the body and makes sure that all the info si there
+        if (req.body.title === ''|| req.body.release === '' || req.body.genre === '' ){
+            res.json({success: false, msg: 'Please make sure you have entered all fields'})
+        } else {
             var movie = new Movie()
             movie.title = req.body.title
             movie.release = req.body.release
@@ -99,23 +116,11 @@ router.route('/moviecollection')
             movie.characters.characterName = req.body.characters.characterName
             movie.characters.actorName= req.body.characters.actorName
             movie.save(function(err){
-                if(err){throw err}})
-
-        // if (req.body.title === ''|| req.body.release === '' || req.body.genre === '' ){
-        //     res.json({success: false, msg: 'Please make sure you have entered all fields'})
-        // } else {
-        //     var movie = new Movie()
-        //     movie.title = req.body.title
-        //     movie.release = req.body.release
-        //     movie.genre = req.body.genre
-        //     movie.characters.characterName = req.body.characters.characterName
-        //     movie.characters.actorName= req.body.characters.actorName
-        //     movie.save(function(err){
-        //         if (err) {
-        //             throw err
-        //         }
-        //     })
-        // }
+                if (err) {
+                    throw err
+                }
+            })
+        }
     })
 
     .delete(authJwtController.isAuthenticated, function (req,res){          // delete movie
@@ -149,6 +154,14 @@ router.route('/moviecollection')
         })
     })
 
+router.route('/reviews')
+    .post(authJwtController.isAuthenticated, function(req,res){
+        // create a review
+    }
+
+//     .get(authJwtController.isAuthenticated, function(req,res){
+//         // get the revies
+//     }
 
 app.use('/', router);
 app.listen(process.env.PORT || 8080);
