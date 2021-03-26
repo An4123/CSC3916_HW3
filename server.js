@@ -66,39 +66,25 @@ router.post('/signup', function(req, res) {
 });
 
 router.post('/signin', function (req, res) {
-    // create a new temp user and get the request's information saved into it
     var userNew = new User();
-    userNew.username = req.body.username
-    userNew.password = req.body.password
+    userNew.username = req.body.username;
+    userNew.password = req.body.password;
 
-    // we find the user's username
-    User.findOne({username: userNew.username}).select('name username password').exec(function(err, user){
-        if(err){
-            res.send(err)
-            throw err
+    User.findOne({ username: userNew.username }).select('name username password').exec(function(err, user) {
+        if (err) {
+            res.send(err);
         }
 
-        // if the user returns as a null that means we never found the username
-        if(user == null)
-        {
-            res.json({success: false, msg: 'No user found with the following username'})
-            res.status(401).send({success: false, msg: 'Authentication failed.'})
-        }
-        else{
-            // if we did find a user, then we compare the password that was in our databas to the input
-            user.comparePassword(userNew.password, function(isMatch){
-                // if its matched we create a user token and send it to them
-                if(isMatch){
-                    var userToken = {id: user.id, username: user.username}
-                    var token = jwt.sign(userToken, process.env.SECRET_KEY)
-                    res.json({success: true, token: 'JWT ' + token})
-                }
-                // otherwise wrong password
-                else{
-                    res.status(401).send({success: false, msg: 'Authentication failed.'})
-                }
+        user.comparePassword(userNew.password, function(isMatch) {
+            if (isMatch) {
+                var userToken = { id: user.id, username: user.username };
+                var token = jwt.sign(userToken, process.env.SECRET_KEY);
+                res.json ({success: true, token: 'JWT ' + token});
+            }
+            else {
+                res.status(401).send({success: false, msg: 'Authentication failed.'});
+            }
         })
-        }
     })
 });
 
