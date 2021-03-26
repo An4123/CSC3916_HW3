@@ -77,8 +77,8 @@ router.route('/moviecollection')
         movie.title = req.body.title
         movie.release = req.body.release
         movie.genre = req.body.genre
-        movie.characters.characterName = req.body.characters.characterName
-        movie.characters.actorName= req.body.characters.actorName
+        movie.characters = req.body.characters
+        
         movie.save(function(err){
             if (err) {
                 throw err
