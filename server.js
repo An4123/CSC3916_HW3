@@ -78,11 +78,13 @@ router.route('/moviecollection')
         movie.release = req.body.release
         movie.genre = req.body.genre
         movie.characters = req.body.characters
-        
         movie.save(function(err){
             if (err) {
-                throw err
+                if (err.code === 11000){
+                    return res.json({success: false, message: "This movie already exist"})
+                } else { throw err }
             }
+            return res.status(200).json({success: true, message: "Successfully added new movie"})
         })
     })
 
