@@ -71,25 +71,20 @@ router.post('/signin', function (req, res) {
 });
 
 
-// router.route('/moviecollection')
-//     .post(authJwtController.isAuthenticated, function(req,res){            // create new movie
-//         var numOfChars = req.body.characters.size;
-//         if (req.body.title === ''|| req.body.release === '' || req.body.genre === '' ){
-//             res.json({success: false, msg: 'Please make sure you have entered all fields'})
-//         } else {
-//             var movie = new Movie()
-//             movie.title = req.body.title
-//             movie.release = req.body.release
-//             movie.genre = req.body.genre
-//             movie.characters.characterName = req.body.characters.characterName
-//             movie.characters.actorName= req.body.characters.actorName
-//             movie.save(function(err){
-//                 if (err) {
-//                     throw err
-//                 }
-//             })
-//         }
-//     })
+router.route('/moviecollection')
+    .post(authJwtController.isAuthenticated, function(req,res){            // create new movie
+        var movie = new Movie()
+        movie.title = req.body.title
+        movie.release = req.body.release
+        movie.genre = req.body.genre
+        movie.characters.characterName = req.body.characters.characterName
+        movie.characters.actorName= req.body.characters.actorName
+        movie.save(function(err){
+            if (err) {
+                throw err
+            }
+        })
+    })
 
 //     .delete(authJwtController.isAuthenticated, function (req,res){          // delete movie
 //         Movie.findOneAndDelete({title: req.body.title}).select('title genre release characters').exec(function(err, movie){
@@ -122,10 +117,32 @@ router.post('/signin', function (req, res) {
 //         })
 //     })
 
-// router.route('/reviews')
-//     .post(authJwtController.isAuthenticated, function(req, res){
-//         console.log("create new review")
-//     })
+router.route('/reviews')
+    .post(authJwtController.isAuthenticated, function(req,res){            // create new movie
+        Movie.findOne({title: req.body.title}).select('title').exec(function(err,movie){
+            if (movie != null) {
+                if (err){
+                    res.json({message: "Movie was not found", error: err})
+                } else{
+                    let review = new Review()
+                    review.nameOfReviewer = req.body.name;
+                    review.comment = req.body.comment
+                    review.rating = req.body.rating
+                    review.titleOfMovie = req.body.title
+                    review.movieID = movie.id
+                    review.save(function(err){
+                        if(err){
+                            res.json({success: false, msg: "could not post review"})
+                            throw err
+                        } else{
+                            res.json({success: true, msg: "Review added"})
+                        }
+                    })
+                }
+            }
+        })
+    })
+
 
 //     .get(authJwtController.isAuthenticated, function(req, res){
 //         console.log("get review")
