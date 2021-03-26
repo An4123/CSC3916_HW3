@@ -1,8 +1,9 @@
 /*
-    Name : Artsiom Skarakhod
+    Name : An Vo
     Project : Homework 3
     Description : Web API salfolding for Movie API
  */
+
 var express = require('express');
 var http = require('http');
 var bodyParser = require('body-parser');
@@ -13,36 +14,14 @@ var jwt = require('jsonwebtoken');
 var cors = require('cors');
 var User = require('./Users');
 var Movie = require('./Movies');
-var Review = require('./Review');
-
-
+var Review = require('./Reviews');
 
 var app = express();
 app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
-
 app.use(passport.initialize());
-
 var router = express.Router();
-
-function getJSONObjectForMovieRequirement(req) {
-    var json = {
-        headers: "No headers",
-        key: process.env.UNIQUE_KEY,
-        body: "No body"
-    };
-
-    if (req.body != null) {
-        json.body = req.body;
-    }
-
-    if (req.headers != null) {
-        json.headers = req.headers;
-    }
-
-    return json;
-}
 
 router.post('/signup', function(req, res) {
     // checks if the fields are empty
