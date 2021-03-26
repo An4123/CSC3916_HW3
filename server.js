@@ -92,65 +92,65 @@ router.post('/signin', function (req, res) {
 });
 
 
-router.route('/moviecollection')
-    .post(authJwtController.isAuthenticated, function(req,res){            // create new movie
-        var numOfChars = req.body.characters.size;
-        if (req.body.title === ''|| req.body.release === '' || req.body.genre === '' ){
-            res.json({success: false, msg: 'Please make sure you have entered all fields'})
-        } else {
-            var movie = new Movie()
-            movie.title = req.body.title
-            movie.release = req.body.release
-            movie.genre = req.body.genre
-            movie.characters.characterName = req.body.characters.characterName
-            movie.characters.actorName= req.body.characters.actorName
-            movie.save(function(err){
-                if (err) {
-                    throw err
-                }
-            })
-        }
-    })
+// router.route('/moviecollection')
+//     .post(authJwtController.isAuthenticated, function(req,res){            // create new movie
+//         var numOfChars = req.body.characters.size;
+//         if (req.body.title === ''|| req.body.release === '' || req.body.genre === '' ){
+//             res.json({success: false, msg: 'Please make sure you have entered all fields'})
+//         } else {
+//             var movie = new Movie()
+//             movie.title = req.body.title
+//             movie.release = req.body.release
+//             movie.genre = req.body.genre
+//             movie.characters.characterName = req.body.characters.characterName
+//             movie.characters.actorName= req.body.characters.actorName
+//             movie.save(function(err){
+//                 if (err) {
+//                     throw err
+//                 }
+//             })
+//         }
+//     })
 
-    .delete(authJwtController.isAuthenticated, function (req,res){          // delete movie
-        Movie.findOneAndDelete({title: req.body.title}).select('title genre release characters').exec(function(err, movie){
-            if (err) {
-                console.log("could not delete")
-                throw err
-            } 
-            else if (movie == null){
-                res.json({msg: "Movie not found"})
-            }
-            else {
-                res.json({msg: "Movie is deleted"})
-            }
-        })
-    })
+//     .delete(authJwtController.isAuthenticated, function (req,res){          // delete movie
+//         Movie.findOneAndDelete({title: req.body.title}).select('title genre release characters').exec(function(err, movie){
+//             if (err) {
+//                 console.log("could not delete")
+//                 throw err
+//             } 
+//             else if (movie == null){
+//                 res.json({msg: "Movie not found"})
+//             }
+//             else {
+//                 res.json({msg: "Movie is deleted"})
+//             }
+//         })
+//     })
 
-    .put(authJwtController.isAuthenticated, function (req,res) {        // updates a movie
-        Movie.findOneAndUpdate({title: req.body.title}, {title: req.body.newtitle}, function (err) {
-            if (err) throw err
-        })
-    })
+//     .put(authJwtController.isAuthenticated, function (req,res) {        // updates a movie
+//         Movie.findOneAndUpdate({title: req.body.title}, {title: req.body.newtitle}, function (err) {
+//             if (err) throw err
+//         })
+//     })
 
-    .get(authJwtController.isAuthenticated, function (req,res){           // searches for one
-        Movie.findOne({title: req.body.title}).select('title genre release characters').exec(function(err, movie){
-            if(err){
-                res.send(err)
-            }
-            console.log(movie.title);
-            console.log(movie.characters.characterName);
-        })
-    })
+//     .get(authJwtController.isAuthenticated, function (req,res){           // searches for one
+//         Movie.findOne({title: req.body.title}).select('title genre release characters').exec(function(err, movie){
+//             if(err){
+//                 res.send(err)
+//             }
+//             console.log(movie.title);
+//             console.log(movie.characters.characterName);
+//         })
+//     })
 
-router.route('/reviews')
-    .post(authJwtController.isAuthenticated, function(req, res){
-        console.log("create new review")
-    })
+// router.route('/reviews')
+//     .post(authJwtController.isAuthenticated, function(req, res){
+//         console.log("create new review")
+//     })
 
-    .get(authJwtController.isAuthenticated, function(req, res){
-        console.log("get review")
-    })
+//     .get(authJwtController.isAuthenticated, function(req, res){
+//         console.log("get review")
+//     })
 
 
 app.use('/', router);
