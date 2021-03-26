@@ -45,26 +45,29 @@ function getJSONObjectForMovieRequirement(req) {
 }
 
 router.post('/signup', function(req, res) {
+    // checks if the fields are empty
     if (!req.body.username || !req.body.password) {
         res.json({success: false, msg: 'Please include both username and password to signup.'})
-    } else {
-        var user = new User();
-        user.name = req.body.name;
-        user.username = req.body.username;
-        user.password = req.body.password;
+        //if they arent create a user
+    }else {
+        var user = new User()
+        user.name = req.body.name
+        user.username = req.body.username
+        user.password = req.body.password
 
+        // we save the user and if run into an error then we put the error out
         user.save(function(err){
             if (err) {
-                if (err.code == 11000)
-                    return res.json({ success: false, message: 'A user with that username already exists.'});
+                if (err.code === 11000) return res.json({success: false, message: 'A user with that username already exist'})
                 else
-                    return res.json(err);
+                    return res.json(err)
             }
-            res.json({success: true, msg: 'Successfully created new user.'})
-        });
+            // otherwise send a happy note
+            console.log("created new user")
+            return res.status(200).json({success: true, message: "Successfully created new user."});
+        })
     }
 });
-
 router.post('/signin', function (req, res) {
     var userNew = new User();
     userNew.username = req.body.username;
@@ -141,13 +144,14 @@ router.route('/moviecollection')
     })
 
 router.route('/reviews')
-    .post(authJwtController.isAuthenticated, function(req,res){
-        // create a review
-    }
+    .post(authJwtController.isAuthenticated, function(req, res){
+        console.log("create new review")
+    })
 
-//     .get(authJwtController.isAuthenticated, function(req,res){
-//         // get the revies
-//     }
+    .get(authJwtController.isAuthenticated, function(req, res){
+        console.log("get review")
+    })
+
 
 app.use('/', router);
 app.listen(process.env.PORT || 8080);
