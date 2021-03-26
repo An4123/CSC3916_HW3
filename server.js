@@ -8,13 +8,13 @@ var express = require('express');
 var http = require('http');
 var bodyParser = require('body-parser');
 var passport = require('passport');
-var authController = require('./auth');
 var authJwtController = require('./auth_jwt');
 var jwt = require('jsonwebtoken');
 var cors = require('cors');
 var User = require('./Users');
 var Movie = require('./Movies');
 var Review = require('./Reviews');
+const Movies = require('./Movies');
 
 var app = express();
 app.use(cors());
@@ -70,7 +70,6 @@ router.post('/signin', function (req, res) {
     })
 });
 
-
 router.route('/moviecollection')
     .post(authJwtController.isAuthenticated, function(req,res){            // create new movie
         var movie = new Movie()
@@ -88,67 +87,82 @@ router.route('/moviecollection')
         })
     })
 
-//     .delete(authJwtController.isAuthenticated, function (req,res){          // delete movie
-//         Movie.findOneAndDelete({title: req.body.title}).select('title genre release characters').exec(function(err, movie){
-//             if (err) {
-//                 console.log("could not delete")
-//                 throw err
-//             } 
-//             else if (movie == null){
-//                 res.json({msg: "Movie not found"})
-//             }
-//             else {
-//                 res.json({msg: "Movie is deleted"})
-//             }
-//         })
-//     })
+    .delete(authJwtController.isAuthenticated, function (req,res){          // delete movie
+        Movie.findOneAndDelete({title: req.body.title}).select('title genre release characters').exec(function(err, movie){
+            if (err) {
+                console.log("could not delete")
+                throw err
+            } 
+            else if (movie === null){
+                res.json({msg: "Movie not found"})
+            }
+            else {
+                res.json({msg: "Movie is deleted"})
+            }
+        })
+    })
 
-//     .put(authJwtController.isAuthenticated, function (req,res) {        // updates a movie
-//         Movie.findOneAndUpdate({title: req.body.title}, {title: req.body.newtitle}, function (err) {
-//             if (err) throw err
-//         })
-//     })
+    .put(authJwtController.isAuthenticated, function (req,res) {        // updates a movie
+        Movie.findOneAndUpdate({title: req.body.originalTitle}, {title: req.body.newTitle}, function (err) {
+            if (err) {throw err}                                                // if error throw error
+            else{res.status(200).json({success: true, msg: 'movie updated'})}   // else updated
+        })
+    })
 
-//     .get(authJwtController.isAuthenticated, function (req,res){           // searches for one
-//         Movie.findOne({title: req.body.title}).select('title genre release characters').exec(function(err, movie){
-//             if(err){
-//                 res.send(err)
-//             }
-//             console.log(movie.title);
-//             console.log(movie.characters.characterName);
-//         })
-//     })
-
-router.route('/reviews')
-    .post(authJwtController.isAuthenticated, function(req,res){            // create new movie
-        Movie.findOne({title: req.body.title}).select('title').exec(function(err,movie){
-            if (movie != null) {
-                if (err){
-                    res.json({message: "Movie was not found", error: err})
-                } else{
-                    let review = new Review()
-                    review.nameOfReviewer = req.body.name;
-                    review.comment = req.body.comment
-                    review.rating = req.body.rating
-                    review.titleOfMovie = req.body.title
-                    review.movieID = movie.id
-                    review.save(function(err){
-                        if(err){
-                            res.json({success: false, msg: "could not post review"})
-                            throw err
-                        } else{
-                            res.json({success: true, msg: "Review added"})
-                        }
-                    })
+    .get(authJwtController.isAuthenticated, function (req,res){           // searches for one
+        Movie.findOne({title: req.body.title}).select('title genre release characters').exec(function(err, movie){
+            if(err){
+                res.json({message: "Error Finding Movie"})    // if we cant find movie or some error
+            }
+            else{
+                if (movie === null){
+                    res.json({success : false, msg: "no movie exists"})
+                }else{
+                    if(req.body.review === 'true'){
+                        Review.find({movideID: movie.id}).select('nameOfReviewer comment rating').exec(function (err, review){
+                            if(err){
+                                return res.json({success: false, msg: "Cant Get Reviews"})
+                            } else{
+                                return res.json({MovieDetails: movie, Movie_Review : review})
+                            }
+                        })
+                    }
+                    else{res.status(200).json({success: true, msg :'movie found', movieDetails : movie})}         // else return the movie}
                 }
             }
         })
     })
 
+router.route('/reviews')
+    .post(authJwtController.isAuthenticated, function(req,res){            // create new movie
+        Movie.findOne({title: req.body.titleOfMovie}).select('title').exec(function(err,movie){
+            if (err) {
+                res.json({message: "Error asf", error: err})
+            } else{
+                if (movie != null) {
+                    if (err){
+                        res.json({message: "Movie was not found", error: err})
+                    } else{
+                        let review = new Review()
+                        review.nameOfReviewer = req.body.name;
+                        review.comment = req.body.comment
+                        review.rating = req.body.rating
+                        review.titleOfMovie = req.body.titleOfMovie
+                        review.movieID = movie.id
+                        review.save(function(err){
+                            if(err){
+                                res.json({success: false, msg: "could not post review"})
+                                throw err
+                            } else{
+                                return res.json({success: true, msg: "Review added"})
+                            }
+                        })
+                    }
+                }
+            }
+        })
+    })
 
-//     .get(authJwtController.isAuthenticated, function(req, res){
-//         console.log("get review")
-//     })
 
 
 app.use('/', router);

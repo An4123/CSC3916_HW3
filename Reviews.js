@@ -17,7 +17,7 @@ var reviewSchema = new Schema({
     nameOfReviewer: {type: String, required : true,},
     comment: {type: String},
     rating: {type: String, required : true},
-    titleOfMovie: {type: String, required : true, enum: ['Action', 'Comedy', 'Drama', 'Fantasy', 'Horror', 'Mystery', 'Thriller', 'Western']},
+    titleOfMovie: {type: String, required : true},
     movieID: {type : mongoose.Types.ObjectId, required: true}
 });
 
