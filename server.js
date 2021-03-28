@@ -77,6 +77,9 @@ router.route('/moviecollection')
         movie.release = req.body.release
         movie.genre = req.body.genre
         movie.characters = req.body.characters
+        if(req.body.title === "" || req.body.release === "" || req.body.genre === "" || req.body.characters === ""){
+            return res.json({success: false, message: "Not all fields were filled out"})
+        }
         movie.save(function(err){
             if (err) {
                 if (err.code === 11000){
