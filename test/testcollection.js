@@ -73,6 +73,8 @@ let update_details = {
     newTitle : "Dude Where's My Car"
 }
 
+
+
 // describe('/moviecollection GET movie before the update', () => {
 //     it('get a movie', (done) => {   
 //         chai.request(server)

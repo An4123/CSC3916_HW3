@@ -1,4 +1,4 @@
 # CSC3916_HW3
 
 
-# this is not finished, i only turned in what i have and plan on resubmiting
+[![Run in Postman](https://run.pstmn.io/button.svg)](https://app.getpostman.com/run-collection/d31c773d66e1ae842017#?env%5BCSC3916_HW3%5D=W3sia2V5IjoidG9rZW4iLCJ2YWx1ZSI6IiIsImVuYWJsZWQiOmZhbHNlfSx7ImtleSI6Imp3dFRva2VuIiwidmFsdWUiOiJKV1QgZXlKaGJHY2lPaUpJVXpJMU5pSXNJblI1Y0NJNklrcFhWQ0o5LmV5SnBaQ0k2SWpZd05HUm1NVFExTm1FeVptSXpNREF4TlRRMU5qTTNPQ0lzSW5WelpYSnVZVzFsSWpvaVZITnBiMjFoTVNJc0ltbGhkQ0k2TVRZeE5qYzBNVEE1TW4wLnJ3bzZpRlZPLV9BdTFBNDhXclJROEotd0QySERYODlicTRWS0pnY3hpUDQiLCJlbmFibGVkIjp0cnVlfV0=)
